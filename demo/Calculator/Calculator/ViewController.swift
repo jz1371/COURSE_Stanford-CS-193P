@@ -13,6 +13,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
     
     var isUserTypingANumber: Bool = false
+    
+    // our model in MVC
+    var brain = CalculatorBrain()
 
     @IBAction func appendDigit(sender: UIButton) {
         // declare a constant variable
@@ -26,47 +29,16 @@ class ViewController: UIViewController {
     }
     
     @IBAction func operate(sender: UIButton) {
-        let operation = sender.currentTitle!
         if isUserTypingANumber {
             enter()
         }
-        
-        switch operation {
-            // closure1
-            case "×": performOperation({(op1: Double, op2: Double) -> Double in return op1 * op2})
-
-            // neat closure
-            case "÷": performOperation({ (op1, op2) in  op1 / op2})
-
-            // function as argument
-            case "+": performOperation(add)
-            
-            // positional arguments with closure
-            case "−": performOperation { $1 - $0 }
-            
-            // function overloading
-            case "√": performOperation { sqrt($0) }
-            
-            default: break
+        if let operation = sender.currentTitle {
+            if let result = brain.performOperation(operation) {
+                displayValue = result
+            } else {
+                displayValue = 0
+            }
         }
-    }
-    
-    private func performOperation(operation: (Double, Double) -> Double) {
-        if (operandStack.count >= 2) {
-            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    private func performOperation(operation: Double -> Double) {
-        if (operandStack.count >= 1) {
-            displayValue = operation(operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    func add(op1: Double, op2: Double) -> Double {
-        return op1 + op2
     }
     
     // take advange of type infer instead of var operandStack: Array<Double> = Array<Double>()
@@ -74,10 +46,14 @@ class ViewController: UIViewController {
 
     @IBAction func enter() {
         isUserTypingANumber = false
-        operandStack.append(displayValue)
-        println("stack: = \(operandStack)")
+        if let result = brain.pushOperand(displayValue) {
+            displayValue = result
+        } else {
+            displayValue = 0
+        }
     }
     
+    // computed property
     var displayValue: Double {
         get {
             return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
