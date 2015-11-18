@@ -26,7 +26,7 @@ class ViewController: UIViewController {
             display.text = digit
             isUserTypingANumber = true
         }
-    }
+    } 
     
     @IBAction func operate(sender: UIButton) {
         if isUserTypingANumber {
