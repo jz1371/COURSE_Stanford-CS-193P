@@ -40,9 +40,6 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    // take advange of type infer instead of var operandStack: Array<Double> = Array<Double>()
-    var operandStack = Array<Double>()
 
     @IBAction func enter() {
         isUserTypingANumber = false
