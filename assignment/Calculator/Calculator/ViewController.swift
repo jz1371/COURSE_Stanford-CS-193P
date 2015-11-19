@@ -9,6 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    private var isUserTyping = false
+    
+    private var brain = CalculatorBrain()
 
     @IBOutlet weak var displayLabel: UILabel!
     
